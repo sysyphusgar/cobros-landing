@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Subí tu reporte de facturas y Timbre manda recordatorios por WhatsApp. Sin integraciones, sin APIs. Para PYMEs costarricenses." />
+  <meta name="theme-color" content="#EFF6FF" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#EFF6FF" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="canonical" href="https://myservercasa.servequake.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_CR" />
+  <meta property="og:url" content="https://myservercasa.servequake.com/" />
+  <meta property="og:title" content="Timbre — Cobrá lo que ya facturaste" />
+  <meta property="og:description" content="Subí tu reporte de facturas y Timbre manda recordatorios por WhatsApp. Para PYMEs costarricenses." />
+  <meta property="og:site_name" content="Timbre" />
+  <meta property="og:image" content="https://myservercasa.servequake.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Timbre — Micro-SaaS de gestión de cobros para PYMEs" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Timbre — Cobrá lo que ya facturaste" />
+  <meta name="twitter:description" content="Subí tu reporte de facturas y Timbre manda recordatorios por WhatsApp. Para PYMEs costarricenses." />
+  <meta name="twitter:image" content="https://myservercasa.servequake.com/og-image.png" />
+
+  <title>Timbre — ¡Cobrá lo que ya facturaste!</title>
+
+  <!-- Fonts: Outfit (display + body) + JetBrains Mono (numerals only) — async para no bloquear render -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link id="async-font" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" media="print">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+
+  <style>
+  :root{--color-bg:#FFFFFF;--color-surface:#F8FAFC;--color-surface-raised:#FFFFFF;--color-border:#E5E7EB;--color-border-strong:#D1D5DB;--color-text:#0F172A;--color-text-muted:#475569;--color-text-subtle:#64748B;--color-accent:#2563EB;--color-accent-hover:#1D4ED8;--color-accent-soft:#EFF6FF;--color-accent-border:#BFDBFE;--color-error:#DC2626;--color-error-soft:#FEE2E2;--color-whatsapp:#25D366;--color-whatsapp-hover:#1EBE5D;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--shadow-e1:0 1px 2px rgba(15,23,42,0.06);--shadow-e2:0 1px 3px rgba(15,23,42,0.08);--ease-quint:cubic-bezier(0.22,1,0.36,1);--font-sans:'Outfit',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--font-mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;--max-width:960px;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  :focus-visible{outline:2px solid var(--color-accent);outline-offset:2px;border-radius:2px;}
+  .skip-link{position:absolute;top:-100px;left:16px;background:var(--color-text);color:var(--color-bg);padding:10px 16px;border-radius:var(--radius-sm);z-index:999;text-decoration:none;font-weight:600;font-size:14px;transition:top 150ms var(--ease-quint);}
+  .skip-link:focus{top:16px;}
+  body{font-family:var(--font-sans);color:var(--color-text);background:var(--color-bg);line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding-top:env(safe-area-inset-top);background-color:#FFFFFF;}
+  .container{max-width:var(--max-width);margin:0 auto;padding:0 32px;}
+  .mono{font-family:var(--font-mono);font-feature-settings:"tnum" 1,"lnum" 1;}
+  .navbar{background:var(--color-accent-soft);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--color-accent-border);backdrop-filter:saturate(180%) blur(8px);}
+  .nav-container{position:relative;display:flex;justify-content:space-between;align-items:center;padding:20px 0;gap:24px;}
+  .nav-actions{position:relative;display:flex;align-items:center;gap:12px;}
+  .brand-logo{display:inline-flex;align-items:center;text-decoration:none;height:48px;transition:opacity 150ms var(--ease-quint);}
+  .brand-logo:hover{opacity:0.7;}
+  .brand-logo img{display:block;height:auto;}
+  .nav-links{display:flex;align-items:center;gap:28px;margin-left:auto;margin-right:16px;}
+  .nav-links a{text-decoration:none;color:var(--color-text-muted);font-size:14px;font-weight:500;transition:color 150ms var(--ease-quint);}
+  .nav-links a:hover{color:var(--color-text);}
+  .nav-cta{padding:8px 14px;border:1px solid var(--color-border-strong);border-radius:var(--radius-sm);color:var(--color-text);font-size:14px;font-weight:600;text-decoration:none;transition:background 150ms var(--ease-quint),border-color 150ms var(--ease-quint);white-space:nowrap;}
+  .nav-cta:hover{background:var(--color-surface);border-color:var(--color-text-subtle);}
+  .mobile-menu-toggle{display:none;}
+  .hero{padding:96px 0 80px;text-align:center;border-bottom:1px solid var(--color-border);}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--color-accent-border);border-radius:var(--radius-sm);color:var(--color-accent-dark);font-size:13px;font-weight:500;margin-bottom:24px;background:var(--color-accent-soft);}
+  .hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--color-accent);box-shadow:0 0 0 4px var(--color-accent-soft);}
+  .hero h1{font-size:clamp(40px,6vw,64px);font-weight:700;line-height:1.05;letter-spacing:-0.03em;margin-bottom:24px;color:var(--color-text);max-width:760px;margin-left:auto;margin-right:auto;}
+  .hero .subheadline{font-size:clamp(17px,2.2vw,19px);color:var(--color-text-muted);margin-bottom:40px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.5;}
+  .hero .subheadline strong{color:var(--color-text);font-weight:600;}
+  .hero-cta{max-width:460px;margin:0 auto 16px;}
+  .cta-form{display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+  .cta-form input[type="email"]{flex:1 1 220px;padding:12px 14px;font-size:15px;border:1px solid var(--color-border-strong);border-radius:var(--radius-sm);background:var(--color-bg);color:var(--color-text);font-family:inherit;transition:border-color 150ms var(--ease-quint),box-shadow 150ms var(--ease-quint);}
+  .cta-form input[type="email"]::placeholder{color:var(--color-text-subtle);}
+  .cta-form input[type="email"]:focus{outline:none;border-color:var(--color-accent);box-shadow:0 0 0 3px var(--color-accent-soft);}
+  .cta-form input[type="email"]:user-invalid,.cta-form input[type="email"][aria-invalid="true"]{border-color:var(--color-error);box-shadow:0 0 0 3px var(--color-error-soft);}
+  .form-error{display:none;color:var(--color-error);font-size:13px;margin-top:-4px;margin-bottom:12px;text-align:center;}
+  .cta-form:has(input:user-invalid)+.form-error,.cta-form:has(input[aria-invalid="true"])+.form-error{display:block;}
+  .cta-form button{padding:12px 20px;font-size:15px;font-weight:600;background:var(--color-accent);color:#FFFFFF;border:1px solid var(--color-accent);border-radius:var(--radius-sm);cursor:pointer;font-family:inherit;white-space:nowrap;transition:background 150ms var(--ease-quint),border-color 150ms var(--ease-quint),transform 100ms var(--ease-quint);}
+  .cta-form button:hover{background:var(--color-accent-hover);border-color:var(--color-accent-hover);}
+  .cta-form button:active{transform:scale(0.98);}
+  .cta-note{font-size:13px;color:var(--color-text-subtle);}
+  .cta-demo-link{display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;font-size:14px;font-weight:500;color:var(--color-accent);text-decoration:none;transition:color 150ms var(--ease-quint),gap 150ms var(--ease-quint);}
+  .cta-demo-link:hover{color:var(--color-accent-hover);gap:10px;}
+  .cta-demo-link .cta-demo-arrow{font-size:16px;transition:transform 150ms var(--ease-quint);}
+  .cta-demo-link:hover .cta-demo-arrow{transform:translateX(2px);}
+  .cta-demo-button{display:flex;justify-content:center;align-items:center;gap:8px;padding:16px 28px;background:var(--color-accent);color:#FFFFFF;border:1px solid var(--color-accent);border-radius:var(--radius-sm);font-size:16px;font-weight:600;text-decoration:none;font-family:inherit;white-space:nowrap;transition:background 150ms var(--ease-quint),border-color 150ms var(--ease-quint),transform 100ms var(--ease-quint),gap 150ms var(--ease-quint);}
+  .cta-demo-button:hover{background:var(--color-accent-hover);border-color:var(--color-accent-hover);gap:10px;}
+  .cta-demo-button:hover .cta-demo-arrow{transform:translateX(2px);}
+  .cta-demo-button:active{transform:scale(0.98);}
+  .cta-demo-button .cta-demo-arrow{color:#FFFFFF;}
+  .section-lead{text-align:center;color:var(--color-text-muted);font-size:clamp(16px,2vw,18px);max-width:560px;margin:0 auto 32px;line-height:1.55;}
+  .notify-form{max-width:480px;margin:0 auto;}
+  .hero-screenshot-placeholder{margin-top:64px;max-width:880px;margin-left:auto;margin-right:auto;aspect-ratio:16 / 9;border:1px dashed var(--color-border-strong);border-radius:var(--radius-lg);background:var(--color-surface);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--color-text-subtle);font-size:14px;font-weight:500;}
+  .hero-screenshot-placeholder .placeholder-tag{font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text-subtle);}
+  section{padding:96px 0;border-bottom:1px solid var(--color-border);}
+  .section-title{font-size:clamp(28px,4vw,36px);font-weight:700;text-align:center;margin-bottom:56px;letter-spacing:-0.025em;color:var(--color-text);}
+  .steps-section{background:var(--color-surface);}
+  .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .step-card{background:var(--color-surface-raised);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:28px 24px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;}
+  .step-number{width:30px;height:30px;border-radius:var(--radius-sm);background:var(--color-accent-soft);color:var(--color-accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;border:1px solid var(--color-accent-border);}
+  .step-card h3{font-size:16px;font-weight:600;line-height:1.35;color:var(--color-text);}
+  .step-card p{color:var(--color-text-muted);font-size:14px;line-height:1.6;}
+  .proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  .proof-item{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:24px;background:var(--color-surface-raised);border:1px solid var(--color-border);border-radius:var(--radius-md);transition:border-color 150ms var(--ease-quint);}
+  .proof-item:hover{border-color:var(--color-border-strong);}
+  .proof-item h3{font-size:16px;font-weight:600;color:var(--color-text);}
+  .proof-item p{color:var(--color-text-muted);font-size:14px;line-height:1.6;}
+  .proof-icon{width:32px;height:32px;border-radius:var(--radius-sm);background:var(--color-accent-soft);color:var(--color-accent);display:flex;align-items:center;justify-content:center;margin-bottom:4px;}
+  .proof-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;}
+  .faq-grid{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+  .faq-item{border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:16px 20px;transition:border-color 150ms var(--ease-quint),box-shadow 150ms var(--ease-quint);}
+  .faq-item[open]{border-color:var(--color-border-strong);box-shadow:var(--shadow-e2);}
+  .faq-item summary{font-weight:600;font-size:15px;color:var(--color-text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;user-select:none;}
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{content:"+";font-size:18px;font-weight:500;color:var(--color-text-subtle);line-height:1;flex-shrink:0;}
+  .faq-item[open] summary::after{content:"−";color:var(--color-text);}
+  .faq-item p{margin-top:12px;color:var(--color-text-muted);font-size:14px;line-height:1.6;}
+  .faq-item p strong{color:var(--color-text);font-weight:600;}
+  .contact-section{text-align:center;padding:96px 20px;background:var(--color-surface);}
+  .contact-section .section-title{margin-bottom:16px;}
+  .contact-section .section-lead{margin-bottom:32px;}
+  .glyph{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+  footer{padding:32px 0;text-align:center;font-size:13px;color:var(--color-text-subtle);border-top:1px solid var(--color-border);background:var(--color-bg);}
+  .site-footer{background:var(--color-bg);border-top:1px solid var(--color-border);padding:32px 0;margin-top:0;}
+  .site-footer .container{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+  .footer-copy{font-size:14px;color:var(--color-text-muted);margin:0;}
+  .footer-credit{font-size:13px;color:var(--color-text-subtle);margin:0;}
+  .footer-link{color:var(--color-accent);text-decoration:none;font-weight:500;transition:opacity 150ms var(--ease-quint);}
+  .footer-link:hover{opacity:0.7;text-decoration:underline;}
+  .contact-channels{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:560px;margin:32px auto 0;}
+  .channel-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:var(--radius-sm);background:var(--color-bg);color:var(--color-text);border:1px solid var(--color-border-strong);font-size:14px;font-weight:500;text-decoration:none;font-family:inherit;transition:background 150ms var(--ease-quint),border-color 150ms var(--ease-quint),transform 100ms var(--ease-quint);}
+  .channel-link:hover{background:var(--color-surface);border-color:var(--color-text-subtle);}
+  .channel-link:active{transform:scale(0.98);}
+  .channel-link-whatsapp{background:var(--color-whatsapp);color:#FFFFFF;border-color:var(--color-whatsapp);}
+  .channel-link-whatsapp:hover{background:var(--color-whatsapp-hover);border-color:var(--color-whatsapp-hover);color:#FFFFFF;}
+  .channel-link-email{background:var(--color-text);color:#FFFFFF;border-color:var(--color-text);}
+  .channel-link-email:hover{background:#1E293B;border-color:#1E293B;color:#FFFFFF;}
+  .channel-link-meeting{background:var(--color-bg);color:var(--color-text);border-color:var(--color-border-strong);}
+  .channel-link-meeting:hover{background:var(--color-accent-soft);border-color:var(--color-accent);color:var(--color-accent);}
+
+  /* SECCIÓN CORREGIDA PARA MOBILE Y SAFARI / WEBKIT */
+  @media (max-width:768px){
+    .container{padding:0 20px;}
+    .brand-logo{padding-left:8px;}
+    .desktop-menu{display:none;}
+    .nav-cta{display:none;}
+    .mobile-menu-toggle{position:relative;display:inline-block;}
+    
+    .mobile-menu-toggle > summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      list-style: none;
+      -webkit-appearance: none;
+      appearance: none;
+      padding: 10px 12px;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius-sm);
+      line-height: 1;
+      user-select: none;
+      color: var(--color-text);
+    }
+
+    .mobile-menu-toggle > summary::-webkit-details-marker,
+    .mobile-menu-toggle > summary::marker {
+      display: none !important;
+      content: "";
+    }
+
+    .mobile-menu-toggle[open] > summary {
+      background: var(--color-accent-soft);
+      border-color: var(--color-accent);
+    }
+
+    /* Fix del selector (.glyph en lugar de .mobile-menu-toggle duplicado) */
+    .mobile-menu-toggle summary .glyph {
+      width: 24px !important;
+      height: 24px !important;
+      min-width: 24px;
+      min-height: 24px;
+      stroke-width: 2.2;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .mobile-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-e2);
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      padding: 6px 0;
+      z-index: 200;
+    }
+
+    .mobile-dropdown a {
+      padding: 10px 16px;
+      text-decoration: none;
+      color: var(--color-text);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .mobile-dropdown a:hover {
+      background: var(--color-surface);
+    }
+
+    .hero{padding:64px 0 56px;}
+    section{padding:64px 0;}
+    .steps-grid,.proof-grid{grid-template-columns:1fr;}
+    .hero-screenshot-placeholder{margin-top:48px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;scroll-behavior:auto !important;}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .hero-eyebrow,.hero .subheadline,.hero-cta,.hero-screenshot-placeholder{animation:fadeUp 450ms var(--ease-quint) both;}
+  .hero h1{animation:fadeUp 450ms var(--ease-quint) 60ms both;}
+  .hero .subheadline{animation-delay:120ms;}
+  .hero-cta{animation-delay:200ms;}
+  .hero-screenshot-placeholder{animation-delay:280ms;animation-duration:600ms;}
+</style>
+
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Saltar al contenido</a>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo" aria-label="Timbre — inicio">
+        <img src="/logo.svg" alt="" width="200" height="60" fetchpriority="high" />
+      </a>
+
+      <nav class="nav-links desktop-menu" aria-label="Navegación principal">
+        <a href="#como-funciona">¿Cómo funciona?</a>
+        <a href="#por-que-timbre">¿Por qué Timbre?</a>
+        <a href="#faq">Preguntas Frecuentes</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="/app" class="nav-cta">Probalo ahora</a>
+
+        <details class="mobile-menu-toggle">
+          <summary aria-label="Abrir menú">
+            <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </summary>
+          <nav class="mobile-dropdown" aria-label="Navegación móvil">
+            <a href="#como-funciona">¿Cómo funciona?</a>
+            <a href="#por-que-timbre">¿Por qué Timbre?</a>
+            <a href="#faq">Preguntas Frecuentes</a>
+            <a href="#contacto">Contacto</a>
+          </nav>
+        </details>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+  <!-- HERO -->
+  <header class="hero" id="probar">
+    <div class="container">
+      <span class="hero-eyebrow">
+        <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+        Automatización de cobros para PYMEs
+      </span>
+
+      <h1>¡Cobrá lo que ya facturaste!</h1>
+
+      <p class="subheadline">
+        Subí tu reporte de facturas y Timbre manda los recordatorios por <strong>WhatsApp y correo electrónico</strong>. No necesitás APIs ni integraciones con tu facturador.
+      </p>
+
+      <div class="hero-cta">
+        <a href="/app" class="cta-demo-button">
+          <span>Probalo ahora</span>
+          <span class="cta-demo-arrow" aria-hidden="true">→</span>
+        </a>
+        <p class="cta-note">Acceso libre. Sin tarjeta.</p>
+      </div>
+
+      <!-- Honest screenshot placeholder — replace with actual product screenshot when available -->
+      <div class="hero-screenshot-placeholder" role="img" aria-label="Screenshot real del producto — pendiente">
+        <span class="placeholder-tag">[Screenshot]</span>
+        <span>Slot para screenshot real del producto — pendiente</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ¿CÓMO FUNCIONA? -->
+  <section class="steps-section" id="como-funciona">
+    <div class="container">
+      <h2 class="section-title">¿Cómo funciona?</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number mono" aria-hidden="true">1</div>
+          <h3>Descargá tu reporte</h3>
+          <p>GTI, Facturar CR, Alegra o cualquier facturador costarricense. Si tenés un Excel con facturas pendientes, eso es todo.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number mono" aria-hidden="true">2</div>
+          <h3>Subilo a Timbre</h3>
+          <p>Identificamos clientes, montos y fechas de vencimiento para armar tu cartera automáticamente, sin esfuerzo manual.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number mono" aria-hidden="true">3</div>
+          <h3>Notificaciones multicanal</h3>
+          <p>Tus clientes reciben mensajes por <strong>WhatsApp o correo</strong> con el detalle y un link directo para pagar. Vos aprobás cada aviso.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ¿POR QUÉ TIMBRE? -->
+  <section id="por-que-timbre">
+    <div class="container">
+      <h2 class="section-title">¿Por qué Timbre?</h2>
+      <div class="proof-grid">
+
+        <!-- Stat removed from this card: no verifiable CR PYME data on hand. -->
+        <div class="proof-item">
+          <div class="proof-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3>La cobranza en CR se atrasa</h3>
+          <p>Las PYMEs costarricenses tardan entre 45 y 58 días en promedio en cobrar sus facturas. Con Timbre reducís la cartera morosa sin perseguir clientes uno a uno.</p>
+        </div>
+
+        <div class="proof-item">
+          <div class="proof-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <h3>Sin sistemas complejos</h3>
+          <p>No necesitás un contador ni un ERP. Si sabés usar Excel, podés empezar hoy mismo.</p>
+        </div>
+
+        <div class="proof-item">
+          <div class="proof-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+          </div>
+          <h3>Cero fricción para tu cliente</h3>
+          <p>Tus clientes no instalan aplicaciones. Reciben una notificación amigable por WhatsApp o correo con su estado de cuenta.</p>
+        </div>
+
+        <div class="proof-item">
+          <div class="proof-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <line x1="4" y1="21" x2="4" y2="14"/>
+              <line x1="4" y1="10" x2="4" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12" y2="3"/>
+              <line x1="20" y1="21" x2="20" y2="16"/>
+              <line x1="20" y1="12" x2="20" y2="3"/>
+              <line x1="1" y1="14" x2="7" y2="14"/>
+              <line x1="9" y1="8" x2="15" y2="8"/>
+              <line x1="17" y1="16" x2="23" y2="16"/>
+            </svg>
+          </div>
+          <h3>Automatizaciones a la medida</h3>
+          <p>¿Necesitás reglas especiales, plantillas personalizadas o un flujo distinto? Ajustamos la automatización según tu empresa.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- AVISAME -->
+  <!-- Email capture para visitantes que no quieren probar el demo todavía.
+       mailto: es placeholder v1 — cuando haya backend real (ConvertKit, Resend audiences, etc.)
+       cambiar el action del form a ese endpoint. hola@timbre.app es la dirección de destino. -->
+  <section class="steps-section avisame-section" id="avisame">
+    <div class="container">
+      <h2 class="section-title">¿Todavía no querés probarlo?</h2>
+      <p class="section-lead">Dejanos tu correo y te avisamos cuando Timbre esté listo para tu negocio. Sin spam, sin llamadas, sin compartir tu email.</p>
+
+      <form class="cta-form notify-form" action="mailto:hola@timbre.app?subject=Timbre%20-%20Avisame%20cuando%20lancemos" method="post" enctype="text/plain">
+        <input type="email" name="email" placeholder="tu@correo.com" required aria-label="Tu correo" />
+        <button type="submit">Avisame</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <h2 class="section-title">Preguntas frecuentes</h2>
+      <div class="faq-grid">
+
+        <details class="faq-item">
+          <summary>¿Es seguro subir la información de mis clientes a Timbre?</summary>
+          <p><strong>Sí.</strong> Tus datos y los de tus clientes son privados. Timbre únicamente procesa la información necesaria para personalizar las notificaciones (nombre, monto, fecha, teléfono o correo). La información se encripta en tránsito y en reposo, y <strong>nunca venderemos ni compartiremos la base de datos</strong> de tu negocio con terceros.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Se pueden hacer ajustes a la medida en mi automatización?</summary>
+          <p><strong>Sí.</strong> Cada negocio opera diferente. Si necesitás personalizar el tono de los mensajes, configurar intervalos de días específicos o ajustar la lógica de envío, adaptamos la automatización a tu proceso.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Es compatible con mi sistema de Factura Electrónica (v4.4)?</summary>
+          <p><strong>Sí.</strong> Timbre no requiere integrarse vía API ni cambiar tu sistema actual. Funciona procesando los reportes o archivos en Excel/CSV que exportás desde GTI, Facturar CR, Alegra, BAC, o cualquier otro proveedor en Costa Rica.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Mis clientes pueden molestarse o marcar el mensaje como SPAM?</summary>
+          <p>No, porque <strong>mantenés el control total</strong>. Antes de que salga cualquier notificación, Timbre te muestra una vista previa. Vos aprobás o editás la redacción. Los mensajes tienen tono profesional, amigable y respetuoso para proteger la relación con tu cliente.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Tengo que instalar algún programa en mi computadora o celular?</summary>
+          <p>No. Timbre es una herramienta 100% web. Accedés desde tu navegador, sin instalar software ni configurar servidores.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>¿Cómo pagan mis clientes una vez que reciben el recordatorio?</summary>
+          <p>El mensaje incluye un enlace donde el cliente ve el detalle de su factura y tus datos de pago registrados (IBAN o SINPE Móvil) para reportarte el comprobante directamente.</p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contact-section" id="contacto">
+    <div class="container">
+      <h2 class="section-title">¿Listo para empezar?</h2>
+      <p class="section-lead">Probá el demo ahora — acceso libre, sin tarjeta. Si preferís que te contactemos personalmente, también podés escribirnos.</p>
+
+      <div class="hero-cta">
+        <a href="/app" class="cta-demo-button">
+          <span>Probalo ahora</span>
+          <span class="cta-demo-arrow" aria-hidden="true">→</span>
+        </a>
+        <p class="cta-note">Acceso libre. Sin tarjeta.</p>
+      </div>
+
+      <!-- Contact channels: placeholders for now. Replace with real WhatsApp number
+           and Calendly link when ready. The hrefs use tel: / mailto: / wa.me patterns
+           so the next person knows what to swap. -->
+      <div class="contact-channels">
+        <a href="https://wa.me/506XXXXXXXX?text=Hola%20Timbre" class="channel-link channel-link-whatsapp">
+          <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+          Hablar por WhatsApp
+        </a>
+        <a href="mailto:hola@timbre.app?subject=Consulta%20Timbre" class="channel-link channel-link-email">
+          <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2"/>
+            <polyline points="3 7 12 13 21 7"/>
+          </svg>
+          Escribir por email
+        </a>
+        <a href="https://calendly.com/tu-usuario/reunion" class="channel-link channel-link-meeting">
+          <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="16" rx="2"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <line x1="8" y1="3" x2="8" y2="7"/>
+            <line x1="16" y1="3" x2="16" y2="7"/>
+          </svg>
+          Agendar una reunión
+        </a>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-copy">© <span id="footer-year">2026</span> Timbre · Todos los derechos reservados.</p>
+      <!-- Lucidatum credit. Plain text until the studio has a public site; when the URL exists, wrap in <a class="footer-link">. -->
+      <p class="footer-credit">Sitio desarrollado por <span>Lucidatum</span>.</p>
+    </div>
+  </footer>
+
+  <!-- Async font loader (cumple CSP sin inline event handlers) -->
+  <script defer src="/js/load-fonts.js"></script>
+
+  <script>
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Cierra el menú móvil al tocar un link (el <details> maneja la apertura nativamente) -->
+  <script>
+    document.querySelectorAll('.mobile-menu-toggle .mobile-dropdown a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        this.closest('details').removeAttribute('open');
+      });
+    });
+  </script>
+
+</body>
+</html>

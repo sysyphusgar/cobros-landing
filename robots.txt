@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /portal/
+Disallow: /404.html
+Disallow: /privacidad.html
+Disallow: /terminos.html
+
+# El portal tiene datos dinámicos por cliente (vía query params). No lo indexamos.
+# Las páginas legales están para humanos, no para crawlers.
+Sitemap: https://myservercasa.servequake.com/sitemap.xml

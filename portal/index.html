@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Estado de cuenta — Timbre" />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#2563EB" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_CR" />
+  <meta property="og:title" content="Estado de cuenta — Timbre" />
+  <meta property="og:description" content="Estado de cuenta generado por Timbre" />
+  <meta property="og:site_name" content="Timbre" />
+
+  <title>Estado de cuenta — Timbre</title>
+
+  <!-- Fonts: Outfit (body) + JetBrains Mono (numerals only) — same as landing for brand continuity -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Ground & surface */
+      --color-bg: #FFFFFF;
+      --color-surface: #F5F5F7;
+      --color-surface-raised: #FFFFFF;
+
+      /* Hairline (slate — matches landing) */
+      --color-border: #E5E7EB;
+
+      /* Ink */
+      --color-text: #0F172A;
+      --color-text-muted: #475569;
+
+      /* Brand accent (Timbre — matches landing) */
+      --color-accent: #2563EB;
+      --color-accent-hover: #1D4ED8;
+      --color-accent-soft: #EFF6FF;
+      --color-accent-border: #BFDBFE;
+
+      /* State semantics — used sparingly */
+      --color-urgent-bg: #FEE2E2;
+      --color-urgent-ink: #991B1B;
+      --color-warning-bg: #FEF3C7;
+      --color-warning-ink: #92400E;
+
+      /* Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+
+      /* Shadows — barely visible */
+      --shadow-e1: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+      /* Motion — same curve as landing */
+      --ease-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+      /* Fonts */
+      --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Mono numerals (₡, factura N°, IBAN, phone) — tabular alignment */
+    .mono {
+      font-family: var(--font-mono);
+      font-feature-settings: "tnum" 1, "lnum" 1;
+    }
+
+    /* Container — mobile-first, 480px max-width (WhatsApp tap viewport) */
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--color-bg);
+      min-height: 100vh;
+      padding: 24px 20px 48px;
+    }
+
+    /* === HEADER === */
+    .header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 24px;
+    }
+
+    .business-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-text);
+      letter-spacing: -0.02em;
+      margin-bottom: 2px;
+    }
+
+    .header-subtitle {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      font-weight: 500;
+    }
+
+    /* === ALERT (state semantics) — no border-left accent strip === */
+    .alert {
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      margin-bottom: 24px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .alert-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .alert.urgent {
+      background: var(--color-urgent-bg);
+      color: var(--color-urgent-ink);
+    }
+
+    .alert.warning {
+      background: var(--color-warning-bg);
+      color: var(--color-warning-ink);
+    }
+
+    /* === INVOICE CARD === */
+    .invoice-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .invoice-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 14px;
+    }
+
+    .invoice-meta .meta-key {
+      color: var(--color-text-muted);
+    }
+
+    .invoice-meta .meta-val {
+      color: var(--color-text);
+      font-weight: 500;
+    }
+
+    .invoice-divider {
+      border-top: 1px solid var(--color-border);
+      margin: 8px 0 4px;
+    }
+
+    .total-amount {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--color-text);
+      text-align: center;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      margin-top: 8px;
+    }
+
+    .total-label {
+      font-size: 11px;
+      color: var(--color-text-muted);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    /* === PAYMENT SECTION === */
+    .payment-section {
+      margin-bottom: 32px;
+    }
+
+    .payment-heading {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 12px;
+    }
+
+    /* Payment options — 44px+ touch targets, full width */
+    .payment-option {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--color-text);
+      transition: border-color 180ms var(--ease-quint), background 180ms var(--ease-quint);
+      min-height: 64px;
+    }
+
+    .payment-option:hover {
+      border-color: var(--color-accent);
+    }
+
+    .payment-option.active {
+      border-color: var(--color-accent);
+      background: var(--color-accent-soft);
+    }
+
+    .payment-option-title {
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .payment-option-detail {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      margin-left: 24px;
+    }
+
+    .glyph {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* Payment info (revealed on toggle) */
+    .payment-info {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-top: 4px;
+      margin-bottom: 16px;
+    }
+
+    .payment-info-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .payment-info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 14px;
+    }
+
+    .payment-info-row .info-key {
+      color: var(--color-text-muted);
+    }
+
+    .payment-info-row .info-val {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    /* === ACTIONS (confirm payment) === */
+    .actions-section {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      margin-bottom: 24px;
+    }
+
+    .actions-heading {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 4px;
+    }
+
+    .actions-text {
+      font-size: 14px;
+      color: var(--color-text-muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* Two-path selection: stacked buttons */
+    .action-paths {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .action-paths .btn {
+      width: 100%;
+    }
+
+    /* Per-path detail (file upload OR textarea) */
+    .action-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Buttons — 44px+ touch target */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: inherit;
+      min-height: 56px;
+      transition: background 180ms var(--ease-quint), border-color 180ms var(--ease-quint);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--color-accent);
+      color: #FFFFFF;
+      border-color: var(--color-accent);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--color-accent-hover);
+      border-color: var(--color-accent-hover);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-outline {
+      background: var(--color-bg);
+      color: var(--color-text);
+      border-color: var(--color-text-muted);
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background: var(--color-surface-raised);
+      border-color: var(--color-text);
+    }
+
+    .btn-sent {
+      background: var(--color-surface-raised);
+      color: var(--color-text);
+      border-color: var(--color-border);
+      cursor: default;
+    }
+
+    /* File input — dashed border, becomes solid + accent when file selected */
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border: 1.5px dashed var(--color-text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      min-height: 56px;
+      transition: border-color 180ms var(--ease-quint), color 180ms var(--ease-quint), background 180ms var(--ease-quint);
+    }
+
+    .file-input-label:hover {
+      border-color: var(--color-accent);
+      color: var(--color-text);
+    }
+
+    .file-input-label.has-file {
+      border-style: solid;
+      border-color: var(--color-accent);
+      color: var(--color-text);
+      background: var(--color-surface-raised);
+    }
+
+    /* Textarea — for path B (justificación) */
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--color-text-muted);
+      border-radius: var(--radius-sm);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      min-height: 88px;
+      transition: border-color 180ms var(--ease-quint), box-shadow 180ms var(--ease-quint);
+    }
+
+    textarea::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .char-counter {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      text-align: right;
+      font-family: var(--font-mono);
+      font-feature-settings: "tnum" 1;
+      margin-top: -4px;
+    }
+
+    .char-counter.valid {
+      color: var(--color-accent);
+    }
+
+    /* Cancel / change-method link */
+    .btn-link {
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 0;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-align: center;
+    }
+
+    .btn-link:hover {
+      color: var(--color-text);
+    }
+
+    /* === HELP === */
+    .help-section {
+      text-align: center;
+      font-size: 13px;
+      color: var(--color-text-muted);
+      padding: 8px 0;
+    }
+
+    .help-section strong {
+      color: var(--color-text);
+      font-weight: 600;
+    }
+
+    /* === FOOTER === */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--color-text-muted);
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* === A11Y === */
+    :focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    .btn:focus-visible {
+      outline-offset: 3px;
+    }
+
+    /* Visually-hidden — readable por screen readers, invisible a la vista */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* === MOTION === */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header,
+    #alertBox,
+    .invoice-card,
+    .payment-section,
+    .actions-section,
+    .help-section {
+      animation: fadeUp 380ms var(--ease-quint) both;
+    }
+    #alertBox { animation-delay: 40ms; }
+    .invoice-card { animation-delay: 80ms; }
+    .payment-section { animation-delay: 140ms; }
+    .actions-section { animation-delay: 200ms; }
+    .help-section { animation-delay: 240ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+
+    <!-- HEADER -->
+    <header class="header">
+      <h1 class="business-name" id="businessName">Ferretería XYZ</h1>
+      <p class="header-subtitle">Estado de cuenta</p>
+    </header>
+
+    <!-- ALERT (conditional — overdue / warning / hidden) -->
+    <div id="alertBox" class="alert" role="alert" hidden>
+      <p class="alert-title" id="alertTitle"></p>
+      <p class="alert-body" id="alertBody"></p>
+    </div>
+
+    <!-- INVOICE CARD — el monto es el hecho principal -->
+    <section class="invoice-card">
+      <div class="invoice-meta">
+        <span class="meta-key">Factura N°</span>
+        <span class="meta-val mono" id="invoiceNumber">4521</span>
+      </div>
+      <div class="invoice-meta">
+        <span class="meta-key">Emitida</span>
+        <span class="meta-val" id="issueDate">01/05/2026</span>
+      </div>
+      <div class="invoice-meta">
+        <span class="meta-key">Vencimiento</span>
+        <span class="meta-val" id="dueDate">15/05/2026</span>
+      </div>
+      <div class="invoice-meta">
+        <span class="meta-key">Descripción</span>
+        <span class="meta-val" id="description">Materiales de construcción</span>
+      </div>
+
+      <div class="invoice-divider"></div>
+
+      <div class="total-amount mono" id="totalAmount">₡150.000</div>
+      <div class="total-label">Total pendiente</div>
+    </section>
+
+    <!-- PAYMENT OPTIONS -->
+    <section class="payment-section">
+      <h2 class="payment-heading">¿Cómo querés pagar?</h2>
+
+      <button class="payment-option" data-method="sinpe" aria-expanded="false" aria-controls="sinpeInfo" onclick="togglePaymentInfo('sinpe')">
+        <span class="payment-option-title">
+          <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="6" y="2" width="12" height="20" rx="2"/>
+            <line x1="12" y1="18" x2="11.99" y2="18"/>
+          </svg>
+          Pagar con SINPE Móvil
+        </span>
+        <span class="payment-option-detail">Mediante número de celular</span>
+      </button>
+
+      <button class="payment-option" data-method="transfer" aria-expanded="false" aria-controls="transferInfo" onclick="togglePaymentInfo('transfer')">
+        <span class="payment-option-title">
+          <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 21h18"/>
+            <path d="M5 21V7l7-4 7 4v14"/>
+            <path d="M9 9h0"/>
+            <path d="M9 13h6"/>
+            <path d="M9 17h6"/>
+          </svg>
+          Transferencia bancaria
+        </span>
+        <span class="payment-option-detail">Mediante cuenta IBAN</span>
+      </button>
+
+      <div id="sinpeInfo" class="payment-info" hidden>
+        <p class="payment-info-title">Datos para SINPE</p>
+        <div class="payment-info-row">
+          <span class="info-key">Número</span>
+          <span class="info-val mono" id="sinpePhone">+506 8888-8888</span>
+        </div>
+        <div class="payment-info-row">
+          <span class="info-key">Nombre</span>
+          <span class="info-val" id="sinpeName">Ferretería XYZ</span>
+        </div>
+        <div class="payment-info-row">
+          <span class="info-key">Monto</span>
+          <span class="info-val mono" id="sinpeAmount">₡150.000</span>
+        </div>
+        <div class="payment-info-row">
+          <span class="info-key">Concepto</span>
+          <span class="info-val mono" id="sinpeConcept">FAC-4521</span>
+        </div>
+      </div>
+
+      <div id="transferInfo" class="payment-info" hidden>
+        <p class="payment-info-title">Datos para transferencia</p>
+        <div class="payment-info-row">
+          <span class="info-key">Banco</span>
+          <span class="info-val" id="bankName">BAC</span>
+        </div>
+        <div class="payment-info-row">
+          <span class="info-key">Cuenta IBAN</span>
+          <span class="info-val mono" id="bankAccount">CR12345678901234567</span>
+        </div>
+        <div class="payment-info-row">
+          <span class="info-key">A nombre de</span>
+          <span class="info-val" id="accountName">Ferretería XYZ S.A.</span>
+        </div>
+        <div class="payment-info-row">
+          <span class="info-key">Monto</span>
+          <span class="info-val mono" id="transferAmount">₡150.000</span>
+        </div>
+        <div class="payment-info-row">
+          <span class="info-key">Concepto</span>
+          <span class="info-val mono" id="transferConcept">FAC-4521</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIRM PAYMENT -->
+    <section class="actions-section">
+      <h2 class="actions-heading">¿Ya pagaste?</h2>
+      <p class="actions-text">Confirmá para que <span id="ownerName">Don José</span> lo vea al instante.</p>
+
+      <!-- Path selection -->
+      <div class="action-paths" id="actionPaths">
+        <button class="btn btn-primary" onclick="selectPath('proof')">
+          <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          Subir comprobante
+        </button>
+        <button class="btn btn-outline" onclick="selectPath('note')">
+          <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Ya pagué sin comprobante
+        </button>
+      </div>
+
+      <!-- Path A: file upload -->
+      <div class="action-detail" id="proofDetail" hidden>
+        <label class="file-input-label" for="proofFile" id="proofFileLabel">
+          <svg class="glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <span id="proofFileText">Subir foto del comprobante</span>
+        </label>
+        <input type="file" id="proofFile" accept="image/*" capture="environment" hidden>
+        <button class="btn btn-primary" id="proofSubmit" onclick="submitProof()" disabled>
+          Enviar comprobante
+        </button>
+        <button class="btn-link" onclick="cancelPath()">Elegir otro método</button>
+      </div>
+
+      <!-- Path B: justification note -->
+      <div class="action-detail" id="noteDetail" hidden>
+        <label for="proofNote" class="actions-heading" style="font-size: 14px; margin-bottom: 4px;">Contanos brevemente cómo pagaste</label>
+        <textarea id="proofNote" placeholder="Ej: 'Pagué en efectivo el martes a María'" minlength="20" maxlength="280" rows="3" oninput="updateCharCounter()"></textarea>
+        <p class="char-counter"><span id="charCount">0</span> / 280 caracteres (mínimo 20)</p>
+        <button class="btn btn-primary" id="noteSubmit" onclick="submitNote()" disabled>
+          Enviar confirmación
+        </button>
+        <button class="btn-link" onclick="cancelPath()">Elegir otro método</button>
+      </div>
+
+      <!-- aria-live status region — screen readers anuncian cambios acá -->
+      <div id="paymentStatus" class="visually-hidden" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- HELP -->
+    <aside class="help-section">
+      ¿Tenés dudas? Escribinos al <strong id="contactPhone" class="mono">+506 8888-8888</strong>
+    </aside>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      Generado por Timbre
+    </footer>
+
+  </main>
+
+  <script>
+    // === DEMO DATA ===
+    // En MVP: estos datos vienen de query params o un fetch a Supabase REST API.
+    // Para probar: visitá ?status=overdue|warning|normal (default: overdue)
+    const demoData = {
+      overdue: {
+        businessName: 'Ferretería XYZ',
+        ownerName: 'Don José',
+        contactPhone: '+506 8888-8888',
+        invoiceNumber: '4521',
+        issueDate: '01/05/2026',
+        dueDate: '15/05/2026',
+        description: 'Materiales de construcción',
+        totalAmount: '₡150.000',
+        sinpePhone: '+506 8888-8888',
+        sinpeName: 'Ferretería XYZ',
+        sinpeAmount: '₡150.000',
+        sinpeConcept: 'FAC-4521',
+        bankName: 'BAC',
+        bankAccount: 'CR12345678901234567',
+        accountName: 'Ferretería XYZ S.A.',
+        transferAmount: '₡150.000',
+        transferConcept: 'FAC-4521',
+        alert: {
+          className: 'urgent',
+          title: 'Factura vencida hace 30 días',
+          body: 'Por favor, regularizá tu pago cuanto antes para mantener tu cuenta al día.',
+        },
+      },
+      warning: {
+        businessName: 'Distribuidora',
+        ownerName: 'María',
+        contactPhone: '+506 7777-7777',
+        invoiceNumber: '7842',
+        issueDate: '15/05/2026',
+        dueDate: '06/06/2026',
+        description: 'Servicios profesionales',
+        totalAmount: '₡320.500',
+        sinpePhone: '+506 7777-7777',
+        sinpeName: 'Distribuidora',
+        sinpeAmount: '₡320.500',
+        sinpeConcept: 'FAC-7842',
+        bankName: 'BCR',
+        bankAccount: 'CR98765432109876543',
+        accountName: 'Distribuidora S.A.',
+        transferAmount: '₡320.500',
+        transferConcept: 'FAC-7842',
+        alert: {
+          className: 'warning',
+          title: 'Vence en 3 días',
+          body: 'Te recomendamos pagar antes del vencimiento para evitar recargos.',
+        },
+      },
+      normal: {
+        businessName: 'Consultoría Andrade',
+        ownerName: 'Carlos',
+        contactPhone: '+506 6666-6666',
+        invoiceNumber: '1109',
+        issueDate: '20/05/2026',
+        dueDate: '03/06/2026',
+        description: 'Asesoría contable',
+        totalAmount: '₡85.000',
+        sinpePhone: '+506 6666-6666',
+        sinpeName: 'Consultoría Andrade',
+        sinpeAmount: '₡85.000',
+        sinpeConcept: 'FAC-1109',
+        bankName: 'BAC',
+        bankAccount: 'CR555000222222000000',
+        accountName: 'Consultoría Andrade S.A.',
+        transferAmount: '₡85.000',
+        transferConcept: 'FAC-1109',
+        alert: null,
+      },
+    };
+
+    // === STATE FROM QUERY ===
+    // In production, the portal fetches from Supabase REST API with the anon key
+    // (no auth required for reading one's own invoice via signed token). For the
+    // demo, the URL parameter is rendered into the page so the data LOOKS
+    // personalized (invoice number is real, rest is mocked).
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref'); // e.g. "FAC-001" or "Fiado"
+    const status = params.get('status') || 'overdue';
+    const data = demoData[status] || demoData.overdue;
+
+    // If a ref is provided, use it as the invoice number (overrides mock)
+    if (ref) {
+      data.invoiceNumber = ref;
+      data.sinpeConcept = ref;
+      data.transferConcept = ref;
+    }
+
+    // === RENDER ===
+    function render() {
+      document.getElementById('businessName').textContent = data.businessName;
+      document.getElementById('ownerName').textContent = data.ownerName;
+      document.getElementById('contactPhone').textContent = data.contactPhone;
+      document.getElementById('invoiceNumber').textContent = data.invoiceNumber;
+      document.getElementById('issueDate').textContent = data.issueDate;
+      document.getElementById('dueDate').textContent = data.dueDate;
+      document.getElementById('description').textContent = data.description;
+      document.getElementById('totalAmount').textContent = data.totalAmount;
+      document.getElementById('sinpePhone').textContent = data.sinpePhone;
+      document.getElementById('sinpeName').textContent = data.sinpeName;
+      document.getElementById('sinpeAmount').textContent = data.sinpeAmount;
+      document.getElementById('sinpeConcept').textContent = data.sinpeConcept;
+      document.getElementById('bankName').textContent = data.bankName;
+      document.getElementById('bankAccount').textContent = data.bankAccount;
+      document.getElementById('accountName').textContent = data.accountName;
+      document.getElementById('transferAmount').textContent = data.transferAmount;
+      document.getElementById('transferConcept').textContent = data.transferConcept;
+
+      // Conditional alert
+      const alertBox = document.getElementById('alertBox');
+      if (data.alert) {
+        alertBox.classList.add(data.alert.className);
+        document.getElementById('alertTitle').textContent = data.alert.title;
+        document.getElementById('alertBody').textContent = data.alert.body;
+        alertBox.hidden = false;
+      } else {
+        alertBox.hidden = true;
+      }
+    }
+
+    // === TOGGLE PAYMENT INFO ===
+    function togglePaymentInfo(method) {
+      const targetId = method + 'Info';
+      const target = document.getElementById(targetId);
+      const trigger = document.querySelector(`[data-method="${method}"]`);
+
+      const wasHidden = target.hidden;
+
+      // Hide both first
+      document.getElementById('sinpeInfo').hidden = true;
+      document.getElementById('transferInfo').hidden = true;
+      document.querySelectorAll('.payment-option').forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+
+      // Toggle the clicked one (or keep hidden if already shown)
+      if (wasHidden) {
+        target.hidden = false;
+        trigger.classList.add('active');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    // === CONFIRM PAYMENT (two paths) ===
+    function selectPath(path) {
+      const actionPaths = document.getElementById('actionPaths');
+      const proofDetail = document.getElementById('proofDetail');
+      const noteDetail = document.getElementById('noteDetail');
+
+      actionPaths.hidden = true;
+      proofDetail.hidden = true;
+      noteDetail.hidden = true;
+
+      if (path === 'proof') {
+        proofDetail.hidden = false;
+      } else if (path === 'note') {
+        noteDetail.hidden = false;
+        document.getElementById('proofNote').focus();
+      }
+    }
+
+    function cancelPath() {
+      document.getElementById('actionPaths').hidden = false;
+      document.getElementById('proofDetail').hidden = true;
+      document.getElementById('noteDetail').hidden = true;
+
+      // Reset path A state
+      const fileInput = document.getElementById('proofFile');
+      fileInput.value = '';
+      document.getElementById('proofFileText').textContent = 'Subir foto del comprobante';
+      document.getElementById('proofFileLabel').classList.remove('has-file');
+      document.getElementById('proofSubmit').disabled = true;
+
+      // Reset path B state
+      document.getElementById('proofNote').value = '';
+      document.getElementById('charCount').textContent = '0';
+      document.querySelector('.char-counter').classList.remove('valid');
+      document.getElementById('noteSubmit').disabled = true;
+    }
+
+    // Path A: file selection handler
+    document.getElementById('proofFile').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const label = document.getElementById('proofFileLabel');
+      const textEl = document.getElementById('proofFileText');
+      const submitBtn = document.getElementById('proofSubmit');
+
+      if (file) {
+        textEl.textContent = file.name;
+        label.classList.add('has-file');
+        submitBtn.disabled = false;
+      } else {
+        textEl.textContent = 'Subir foto del comprobante';
+        label.classList.remove('has-file');
+        submitBtn.disabled = true;
+      }
+    });
+
+    function submitProof() {
+      const btn = document.getElementById('proofSubmit');
+      if (btn.disabled) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Enviando comprobante...';
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-sent');
+
+      // En MVP: subir imagen a storage + crear Payment con proof_url
+      setTimeout(() => {
+        btn.textContent = '✓ Comprobante enviado';
+        document.getElementById('paymentStatus').textContent = 'Comprobante enviado';
+      }, 800);
+    }
+
+    // Path B: char counter + submit
+    function updateCharCounter() {
+      const note = document.getElementById('proofNote');
+      const counter = document.getElementById('charCount');
+      const counterWrap = document.querySelector('.char-counter');
+      const submitBtn = document.getElementById('noteSubmit');
+      const len = note.value.trim().length;
+
+      counter.textContent = len;
+
+      if (len >= 20 && len <= 280) {
+        counterWrap.classList.add('valid');
+        submitBtn.disabled = false;
+      } else {
+        counterWrap.classList.remove('valid');
+        submitBtn.disabled = true;
+      }
+    }
+
+    function submitNote() {
+      const btn = document.getElementById('noteSubmit');
+      if (btn.disabled) return;
+
+      const note = document.getElementById('proofNote').value.trim();
+
+      btn.disabled = true;
+      btn.textContent = 'Enviando confirmación...';
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-sent');
+
+      // En MVP: crear Payment con proof_note (sin proof_url)
+      setTimeout(() => {
+        btn.textContent = '✓ Confirmación enviada';
+        document.getElementById('paymentStatus').textContent = 'Confirmación enviada';
+      }, 800);
+    }
+
+    render();
+  </script>
+</body>
+</html>
