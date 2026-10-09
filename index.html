@@ -498,18 +498,8 @@
   <!-- Async font loader (cumple CSP sin inline event handlers) -->
   <script defer src="/js/load-fonts.js"></script>
 
-  <script>
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
-  </script>
-
-  <!-- Cierra el menú móvil al tocar un link (el <details> maneja la apertura nativamente) -->
-  <script>
-    document.querySelectorAll('.mobile-menu-toggle .mobile-dropdown a').forEach(function(link) {
-      link.addEventListener('click', function() {
-        this.closest('details').removeAttribute('open');
-      });
-    });
-  </script>
+  <!-- Mobile menu: close on link tap, outside click, and Escape key (external file to comply with CSP) -->
+  <script defer src="/js/menu.js"></script>
 
 </body>
 </html>
